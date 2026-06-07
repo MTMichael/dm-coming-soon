@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D&M Studio — Devinez</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{--creme:#FBF6EE;--creme-2:#F4EADB;--vert:#2C3A2C;--vert-doux:#52614F;--terracotta:#C07D56;--sauge:#8FA68E;--encre:#3A352E;--ligne:rgba(44,58,44,.14)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:'Jost',sans-serif;color:var(--encre);background:var(--creme);-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;min-height:100svh}
+  @view-transition{ navigation:auto }
+  ::view-transition-old(root),::view-transition-new(root){animation-duration:.62s;animation-timing-function:cubic-bezier(.2,.7,.2,1)}
+  .mesh{view-transition-name:fond}.logo{view-transition-name:marque}
+  .mesh{position:fixed;inset:0;z-index:0;pointer-events:none;will-change:transform;
+    background:radial-gradient(40% 50% at 18% 22%, rgba(192,125,86,.20), transparent 70%),radial-gradient(45% 55% at 85% 30%, rgba(143,166,142,.22), transparent 72%),radial-gradient(60% 60% at 50% 100%, rgba(44,58,44,.10), transparent 70%),linear-gradient(160deg,var(--creme),var(--creme-2));animation:derive 26s ease-in-out infinite alternate}
+  @keyframes derive{0%{transform:scale(1)}100%{transform:scale(1.08)}}
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .scene{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 24px 38px;text-align:center}
+  .parallax{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:20px 24px}
+  .logo{font-weight:500;font-size:13px;letter-spacing:.42em;text-transform:uppercase;color:var(--vert)}
+  .retour{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--vert-doux);text-decoration:none;display:inline-flex;align-items:center;gap:7px;opacity:.8;transition:opacity .2s,gap .2s;cursor:pointer}
+  .retour:hover{opacity:1;gap:10px}
+  .coeur{max-width:500px;width:100%;margin:auto 0;display:flex;flex-direction:column;align-items:center}
+  h1{font-family:'Cormorant Garamond';font-weight:400;color:var(--vert);font-size:clamp(32px,5.6vw,54px);line-height:1.08;margin-bottom:16px;opacity:0;animation:monte 1s ease .12s forwards}
+  h1 em{font-style:italic;color:var(--terracotta)}
+  .sous{font-size:15px;font-weight:300;color:var(--vert-doux);line-height:1.6;max-width:400px;margin:0 auto 26px;opacity:0;animation:monte 1s ease .26s forwards}
+  .sous2{font-size:13.5px;font-weight:300;color:var(--vert-doux);line-height:1.55;margin:6px 0 18px}
+
+  .choix{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;width:100%;opacity:0;animation:monteCarte 1s ease .4s forwards}
+  .choixBtn{flex:1;min-width:200px;background:rgba(255,255,255,.6);backdrop-filter:blur(9px);border:1px solid var(--ligne);border-radius:16px;padding:24px 20px;cursor:pointer;transition:all .25s;text-align:center}
+  .choixBtn:hover{border-color:var(--terracotta);transform:translateY(-3px);box-shadow:0 18px 44px -24px rgba(44,58,44,.45)}
+  .choixBtn .ic{font-size:22px;margin-bottom:10px}
+  .choixBtn .t{font-family:'Cormorant Garamond';font-size:21px;color:var(--vert);font-weight:500}
+  .choixBtn .d{font-size:12px;color:var(--vert-doux);margin-top:5px;line-height:1.4}
+
+  .bloc{display:none;width:100%}
+  .bloc.on{display:block;animation:monteCarte .7s cubic-bezier(.2,.7,.2,1) forwards}
+  .carte{width:100%;background:rgba(255,255,255,.62);backdrop-filter:blur(9px);border:1px solid var(--ligne);border-radius:18px;padding:26px;text-align:left;box-shadow:0 26px 64px -36px rgba(44,58,44,.45)}
+  @keyframes monteCarte{from{opacity:0;transform:translateY(24px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+  .q{font-family:'Cormorant Garamond';font-size:22px;color:var(--vert);font-weight:500;line-height:1.2;margin-bottom:16px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .chip{font-size:12.5px;color:var(--vert-doux);border:1px solid var(--ligne);background:transparent;border-radius:999px;padding:8px 14px;cursor:pointer;transition:all .25s}
+  .chip:hover{border-color:var(--terracotta);color:var(--terracotta);transform:translateY(-1px)}
+  .chip.actif{background:var(--vert);border-color:var(--vert);color:var(--creme)}
+  .champ input{width:100%;font-family:'Jost';font-size:15px;color:var(--encre);background:rgba(255,255,255,.7);border:1px solid var(--ligne);border-radius:11px;padding:13px 15px;outline:none;transition:border-color .25s,box-shadow .25s;margin-bottom:12px}
+  .champ input:focus{border-color:var(--sauge);box-shadow:0 0 0 3px rgba(143,166,142,.18)}
+  .champ input::placeholder{color:#a59c8e}
+  .btn{width:100%;font-family:'Jost';font-weight:500;font-size:14px;letter-spacing:.06em;color:var(--creme);background:var(--vert);border:none;border-radius:11px;padding:14px;cursor:pointer;text-transform:uppercase;transition:background .25s,transform .15s}
+  .btn:hover{background:#22301F;transform:translateY(-1px)}
+  .rgpd{font-size:11px;color:#9a9183;line-height:1.5;margin-top:11px;text-align:center}
+  .lien-retour{margin-top:14px;font-size:12px;color:var(--vert-doux);text-decoration:underline;cursor:pointer;text-align:center;display:block;background:none;border:none;width:100%}
+
+  /* mini-jeu */
+  .jeuAire{position:relative;height:300px;border:1px solid var(--ligne);border-radius:16px;overflow:hidden;background:rgba(255,255,255,.4);margin-bottom:14px}
+  .jeuHud{position:absolute;top:10px;left:0;right:0;z-index:2;display:flex;justify-content:space-between;padding:0 16px;font-size:13px;color:var(--vert);pointer-events:none}
+  .jeuHud b{font-family:'Cormorant Garamond';font-size:18px}
+  .pJeu{position:absolute;top:-34px;width:26px;height:26px;border-radius:50% 50% 50% 0;cursor:pointer;background:radial-gradient(circle at 30% 30%, var(--terracotta), rgba(192,125,86,.35) 72%);animation:tombe linear forwards}
+  @keyframes tombe{to{top:320px;transform:rotate(220deg)}}
+  .pJeu.catch{animation:catchPop .3s ease forwards}
+  @keyframes catchPop{to{transform:scale(1.9);opacity:0}}
+
+  .reactions{display:flex;flex-direction:column;align-items:center;gap:7px;margin-top:24px;opacity:0;animation:monte 1s ease .6s forwards}
+  .hate{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--terracotta);background:transparent;border:1px solid var(--ligne);border-radius:999px;padding:9px 16px;cursor:pointer;transition:all .25s}
+  .hate:hover{border-color:var(--terracotta);transform:translateY(-1px)}
+  .hate.on{background:var(--terracotta);color:var(--creme);border-color:var(--terracotta)}
+  .hate svg{transition:transform .3s cubic-bezier(.2,.7,.2,1)}.hate.on svg{transform:scale(1.25)}
+  .cpt{font-size:12px;color:var(--vert-doux);line-height:1.5}
+  .cpt b{color:var(--vert);font-weight:600;font-size:19px;font-family:'Cormorant Garamond';letter-spacing:.01em}
+  .cpt-sub{font-size:11.5px}
+
+  .merci{text-align:center;padding:6px 0}
+  .merci .sceau{width:44px;height:44px;border-radius:50%;border:1px solid var(--terracotta);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--terracotta);animation:pulse 2.4s ease-in-out infinite}
+  .merci .mk{font-family:'Cormorant Garamond';font-size:27px;color:var(--vert);font-weight:500;margin-bottom:8px}
+  .merci p{font-size:14px;color:var(--vert-doux);font-weight:300;line-height:1.6}
+
+  @keyframes monte{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(192,125,86,.25)}50%{box-shadow:0 0 0 10px rgba(192,125,86,0)}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}h1,.sous,.choix,.reactions{opacity:1}}
+  @media(max-width:520px){.carte{padding:22px 18px}.topbar{padding:16px 18px}}
+</style>
+</head>
+<body>
+  <div class="mesh parallax" data-depth="12"></div>
+  <div class="grain"></div>
+  <div class="topbar"><div class="logo">D<b>&amp;</b>M&nbsp;Studio</div><a class="retour" href="index.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 18l-6-6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Retour</a></div>
+
+  <main class="scene">
+    <div class="coeur parallax" data-depth="-5">
+      <h1>Alors, à votre avis,<br><em>qu'est-ce que c'est ?</em></h1>
+      <p class="sous">Un studio&nbsp;? Un service&nbsp;? Autre chose&nbsp;? On préfère vous laisser imaginer. Dites-nous votre intuition — et soyez prévenu·e en tout premier le jour du lancement.</p>
+
+      <!-- ÉCRAN DE CHOIX -->
+      <div class="choix" id="choix">
+        <button class="choixBtn" id="choixQuestion" type="button">
+          <div class="ic">💭</div><div class="t">Répondre à la question</div>
+          <div class="d">Dites-nous votre intuition</div>
+        </button>
+        <button class="choixBtn" id="choixJeu" type="button">
+          <div class="ic">🌸</div><div class="t">Tenter le mini-jeu</div>
+          <div class="d">15 secondes, juste pour le plaisir</div>
+        </button>
+      </div>
+
+      <!-- BLOC QUESTION -->
+      <div class="bloc" id="blocQuestion">
+        <div class="carte" id="carteQ">
+          <div class="q">Votre intuition&nbsp;:</div>
+          <div class="chips" id="chips">
+            <button class="chip" type="button">Un studio créatif</button>
+            <button class="chip" type="button">Un service premium</button>
+            <button class="chip" type="button">Un outil pour les pros</button>
+            <button class="chip" type="button">Surprenez-moi</button>
+          </div>
+          <div class="champ"><input id="devine" type="text" placeholder="Ou écrivez votre propre idée…" /></div>
+          <div class="champ"><input id="email" type="email" inputmode="email" placeholder="Votre email pour être prévenu·e en premier" /></div>
+          <button class="btn" id="envoyer" type="button">Je veux être prévenu·e</button>
+          <p class="rgpd">Un seul message, le jour du lancement. Désinscription en un clic.</p>
+          <button class="lien-retour" type="button" onclick="revenirChoix()">← autre option</button>
+        </div>
+      </div>
+
+      <!-- BLOC JEU -->
+      <div class="bloc" id="blocJeu">
+        <div class="carte">
+          <div id="jeuIntro">
+            <div class="q">Attrapez les pétales 🌸</div>
+            <p class="sous2">Touchez un maximum de pétales en 15 secondes. Prêt·e&nbsp;?</p>
+            <button class="btn" id="startJeu" type="button">Commencer</button>
+            <button class="lien-retour" type="button" onclick="revenirChoix()">← autre option</button>
+          </div>
+          <div id="jeuPlay" style="display:none">
+            <div class="jeuAire" id="jeuAire"><div class="jeuHud"><span>⏱ <b id="tTemps">15</b>s</span><span>🌸 <b id="tScore">0</b></span></div></div>
+          </div>
+          <div id="jeuFin" style="display:none">
+            <div class="q" style="text-align:center">Bel instinct festif&nbsp;!</div>
+            <p class="sous2" style="text-align:center">Score&nbsp;: <b id="scoreFinal">0</b> pétales. Laissez votre email pour être prévenu·e en premier.</p>
+            <div class="champ"><input id="emailJeu" type="email" inputmode="email" placeholder="Votre email" /></div>
+            <button class="btn" id="envoyerJeu" type="button">Je veux être prévenu·e</button>
+            <p class="rgpd">Un seul message, le jour du lancement. Désinscription en un clic.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MERCI (partagé) -->
+      <div class="bloc" id="blocMerci">
+        <div class="carte"><div class="merci">
+          <div class="sceau" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="mk">Merci.</div>
+          <p>Vous serez parmi les premiers à découvrir D&amp;M Studio.</p>
+        </div></div>
+      </div>
+
+      <!-- COMPTEURS -->
+      <div class="reactions">
+        <button class="hate" id="hate" type="button" aria-pressed="false">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-9.3-9C1 8.5 2.8 5.5 6 5.5c1.9 0 3.2 1.1 4 2.2.8-1.1 2.1-2.2 4-2.2 3.2 0 5 3 3.3 6.5C19 16.4 12 21 12 21z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          J'ai hâte</button>
+        <span class="cpt"><b id="cptHate">247</b> ont hâte · <b id="cptRep">89</b> ont répondu</span>
+        <span class="cpt cpt-sub"><b id="cptVue">1&nbsp;204</b> visiteurs depuis le lancement</span>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ===== Config Supabase (laisser vide = mode démo) =====
+    const SUPABASE_URL  = '';   // ex: https://xxxxx.supabase.co
+    const SUPABASE_ANON = '';   // clé anon public
+    const SUPA_ON = !!(SUPABASE_URL && SUPABASE_ANON);
+    const H = {apikey:SUPABASE_ANON,Authorization:'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'};
+    async function supaIncr(nom){ if(!SUPA_ON) return null; try{const r=await fetch(SUPABASE_URL+'/rest/v1/rpc/incr',{method:'POST',headers:H,body:JSON.stringify({nom_compteur:nom})});return await r.json();}catch(e){return null;} }
+    async function supaCompteurs(){ if(!SUPA_ON) return null; try{const r=await fetch(SUPABASE_URL+'/rest/v1/compteurs?select=nom,valeur',{headers:H});const rows=await r.json();const o={};rows.forEach(x=>o[x.nom]=x.valeur);return o;}catch(e){return null;} }
+    async function supaProspect(email,devinette){ if(!SUPA_ON) return; try{await fetch(SUPABASE_URL+'/rest/v1/prospects',{method:'POST',headers:{...H,Prefer:'return=minimal'},body:JSON.stringify({email,devinette,consentement:true})});}catch(e){} }
+    const fr=n=>Number(n).toLocaleString('fr-FR');
+
+    // charge les vrais compteurs si Supabase est branché
+    (async()=>{const c=await supaCompteurs(); if(c){
+      if(c.ont_hate!=null)cptHate.textContent=fr(c.ont_hate);
+      if(c.reponses!=null)cptRep.textContent=fr(c.reponses);
+      if(c.visiteurs!=null)cptVue.textContent=fr(c.visiteurs);
+    }})();
+
+    const $=id=>document.getElementById(id);
+    const cptHate=$('cptHate'),cptRep=$('cptRep'),cptVue=$('cptVue');
+    const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+    if(!rm){const els=[...document.querySelectorAll('.parallax')];
+      addEventListener('pointermove',e=>{const x=(e.clientX/innerWidth-.5),y=(e.clientY/innerHeight-.5);els.forEach(el=>{const d=+el.dataset.depth||0;el.style.transform=`translate(${x*d}px,${y*d}px)`;});});}
+
+    // choix
+    function montrer(idBloc){ $('choix').style.display='none'; ['blocQuestion','blocJeu','blocMerci'].forEach(b=>$(b).classList.remove('on')); $(idBloc).classList.add('on'); }
+    function revenirChoix(){ ['blocQuestion','blocJeu','blocMerci'].forEach(b=>$(b).classList.remove('on')); $('choix').style.display='flex'; }
+    window.revenirChoix=revenirChoix;
+    $('choixQuestion').onclick=()=>montrer('blocQuestion');
+    $('choixJeu').onclick=()=>montrer('blocJeu');
+
+    // chips
+    let choix=null; const chips=$('chips');
+    chips.addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;[...chips.children].forEach(c=>c.classList.remove('actif'));b.classList.add('actif');choix=b.textContent.trim();});
+
+    // soumission partagée
+    function valideEmail(v){return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);}
+    async function soumettre(email,devinette){
+      await supaProspect(email,devinette);
+      const v=await supaIncr('reponses'); if(v!=null)cptRep.textContent=fr(v);
+      montrer('blocMerci');
+    }
+    $('envoyer').onclick=()=>{const v=$('email').value.trim(); if(!valideEmail(v)){$('email').style.borderColor='#C07D56';$('email').focus();return;}
+      soumettre(v, choix||$('devine').value.trim()||null);};
+    $('envoyerJeu').onclick=()=>{const v=$('emailJeu').value.trim(); if(!valideEmail(v)){$('emailJeu').style.borderColor='#C07D56';$('emailJeu').focus();return;}
+      soumettre(v, 'jeu: '+($('scoreFinal').textContent||'0')+' pétales');};
+
+    // "j'ai hâte" — une fois par navigateur
+    const hate=$('hate');
+    if(localStorage.getItem('dm_hate')){hate.classList.add('on');hate.setAttribute('aria-pressed','true');}
+    hate.onclick=async()=>{ if(localStorage.getItem('dm_hate'))return;
+      localStorage.setItem('dm_hate','1'); hate.classList.add('on'); hate.setAttribute('aria-pressed','true');
+      const v=await supaIncr('ont_hate'); if(v!=null)cptHate.textContent=fr(v); else cptHate.textContent=fr(parseInt(cptHate.textContent.replace(/\D/g,''),10)+1); };
+
+    // mini-jeu pétales
+    let score=0,temps=15,spawn,tick;
+    $('startJeu').onclick=()=>{ $('jeuIntro').style.display='none'; $('jeuPlay').style.display='block';
+      score=0;temps=15;$('tScore').textContent=0;$('tTemps').textContent=15;
+      spawn=setInterval(spawnP,520);
+      tick=setInterval(()=>{temps--;$('tTemps').textContent=temps; if(temps<=0)finJeu();},1000); };
+    function spawnP(){ const aire=$('jeuAire'); const p=document.createElement('div'); p.className='pJeu';
+      p.style.left=(8+Math.random()*82)+'%'; p.style.animationDuration=(2.6+Math.random()*1.4)+'s';
+      p.addEventListener('pointerdown',()=>{ if(p.dataset.c)return; p.dataset.c='1'; score++; $('tScore').textContent=score; p.classList.add('catch'); setTimeout(()=>p.remove(),300); });
+      p.addEventListener('animationend',()=>p.remove());
+      aire.appendChild(p); }
+    function finJeu(){ clearInterval(spawn); clearInterval(tick); [...$('jeuAire').querySelectorAll('.pJeu')].forEach(x=>x.remove());
+      $('jeuPlay').style.display='none'; $('scoreFinal').textContent=score; $('jeuFin').style.display='block'; }
+  </script>
+</body>
+</html>

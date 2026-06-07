@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D&M Studio — Coming soon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{--creme:#FBF6EE;--creme-2:#F4EADB;--vert:#2C3A2C;--vert-doux:#52614F;
+    --terracotta:#C07D56;--sauge:#8FA68E;--encre:#3A352E;--ligne:rgba(44,58,44,.14)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:'Jost',sans-serif;color:var(--encre);background:var(--creme);
+    -webkit-font-smoothing:antialiased;overflow:hidden;position:relative;min-height:100svh}
+  @view-transition{ navigation:auto }
+  ::view-transition-old(root),::view-transition-new(root){animation-duration:.62s;animation-timing-function:cubic-bezier(.2,.7,.2,1)}
+  .mesh{view-transition-name:fond}
+  .logo{view-transition-name:marque}
+  .mesh{position:fixed;inset:0;z-index:0;pointer-events:none;will-change:transform;
+    background:
+      radial-gradient(40% 50% at 18% 22%, rgba(192,125,86,.20), transparent 70%),
+      radial-gradient(45% 55% at 85% 30%, rgba(143,166,142,.22), transparent 72%),
+      radial-gradient(60% 60% at 50% 100%, rgba(44,58,44,.10), transparent 70%),
+      linear-gradient(160deg,var(--creme),var(--creme-2));
+    animation:derive 26s ease-in-out infinite alternate}
+  @keyframes derive{0%{transform:scale(1)}100%{transform:scale(1.08)}}
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .lueur{position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(50% 45% at 50% 42%, rgba(192,125,86,.10), transparent 70%);animation:respire 7s ease-in-out infinite}
+  @keyframes respire{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.9;transform:scale(1.06)}}
+  .petale{position:fixed;z-index:1;border-radius:50% 50% 50% 0;pointer-events:none;
+    background:radial-gradient(circle at 30% 30%, rgba(192,125,86,.5), rgba(192,125,86,0) 70%);animation:flotte linear infinite;opacity:0}
+  @keyframes flotte{0%{transform:translateY(20vh) rotate(0deg);opacity:0}12%{opacity:.7}88%{opacity:.7}100%{transform:translateY(-110vh) rotate(220deg);opacity:0}}
+  .scene{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center}
+  .parallax{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+  .logo{margin-bottom:auto;padding-top:6px;font-weight:400;font-size:14px;color:var(--vert);text-transform:uppercase;opacity:0;letter-spacing:.7em;animation:logoIn 1.4s cubic-bezier(.2,.7,.2,1) .15s forwards}
+  .logo b{font-weight:500}
+  @keyframes logoIn{0%{opacity:0;letter-spacing:.2em}100%{opacity:1;letter-spacing:.42em}}
+  .coeur{margin:auto 0;display:flex;flex-direction:column;align-items:center}
+  .cs{display:inline-flex;align-items:center;gap:12px;color:var(--terracotta);font-size:12px;letter-spacing:.34em;text-transform:uppercase;margin-bottom:30px;opacity:0;animation:monte .9s ease .45s forwards}
+  .cs .tiret{width:0;height:1px;background:var(--terracotta);opacity:.6;animation:traitX .8s ease .7s forwards}
+  @keyframes traitX{to{width:30px}}
+  .ligne{font-family:'Cormorant Garamond';font-weight:400;color:var(--vert);font-size:clamp(38px,7vw,76px);line-height:1.05;margin-bottom:30px;overflow:hidden}
+  .ligne span{display:block;transform:translateY(110%);animation:revele 1.1s cubic-bezier(.2,.78,.15,1) .6s forwards}
+  .ligne em{font-style:italic;color:var(--terracotta)}
+  .ornement{width:130px;height:18px;margin-bottom:34px;opacity:0;animation:apparait 1.2s ease 1.15s forwards}
+  .ornement path{stroke:var(--sauge);stroke-width:1.4;fill:none;stroke-dasharray:240;stroke-dashoffset:240;animation:trace 1.9s ease 1.2s forwards}
+  .ornement circle{fill:var(--terracotta);opacity:0;transform-origin:center;animation:pop .6s ease 2.4s forwards}
+  @keyframes pop{0%{opacity:0;transform:scale(0)}70%{transform:scale(1.4)}100%{opacity:1;transform:scale(1)}}
+  .cta{position:relative;font-family:'Jost';font-weight:500;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--creme);background:var(--vert);border:none;border-radius:999px;padding:16px 34px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:11px;transition:background .25s,transform .2s,gap .25s,box-shadow .3s;opacity:0;animation:monte 1s ease 1.45s forwards,halo 3.4s ease-in-out 2.4s infinite}
+  .cta:hover{background:#22301F;transform:translateY(-2px);gap:16px;box-shadow:0 14px 30px -12px rgba(44,58,44,.5)}
+  .cta svg{transition:transform .25s}.cta:hover svg{transform:translateX(4px)}
+  @keyframes halo{0%,100%{box-shadow:0 0 0 0 rgba(192,125,86,0)}50%{box-shadow:0 0 0 9px rgba(192,125,86,.10)}}
+  .date{margin-top:auto;padding-bottom:4px;font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--vert-doux);opacity:0;animation:monte 1s ease 1.75s forwards}
+  @keyframes monte{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes revele{to{transform:translateY(0)}}
+  @keyframes apparait{to{opacity:1}}
+  @keyframes trace{to{stroke-dashoffset:0}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}.logo,.cs,.cta,.date,.ornement{opacity:1}.ligne span{transform:none}.cs .tiret{width:30px}.ornement path{stroke-dashoffset:0}.ornement circle{opacity:1}}
+</style>
+</head>
+<body>
+  <div class="mesh parallax" data-depth="14"></div>
+  <div class="lueur"></div>
+  <div class="grain"></div>
+  <main class="scene">
+    <div class="logo">D<b>&amp;</b>M&nbsp;&nbsp;Studio</div>
+    <div class="coeur parallax" data-depth="-6">
+      <div class="cs"><span class="tiret"></span> Coming soon <span class="tiret"></span></div>
+      <div class="ligne"><span>Quelque chose <em>se prépare.</em></span></div>
+      <svg class="ornement" viewBox="0 0 130 18" aria-hidden="true"><path d="M2 9 C 32 9, 40 2, 65 9 C 90 16, 98 9, 128 9"/><circle cx="65" cy="9" r="2.8"/></svg>
+      <a class="cta" href="deviner.html">Devinez ce que c'est
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <div class="date" id="date"></div>
+  </main>
+  <script>
+    // ===== Config Supabase (laisser vide = mode démo) =====
+    const SUPABASE_URL  = '';   // ex: https://xxxxx.supabase.co
+    const SUPABASE_ANON = '';   // clé anon public
+    const SUPA_ON = !!(SUPABASE_URL && SUPABASE_ANON);
+    async function supaIncr(nom){ if(!SUPA_ON) return; try{ await fetch(SUPABASE_URL+'/rest/v1/rpc/incr',{method:'POST',
+      headers:{apikey:SUPABASE_ANON,Authorization:'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'},
+      body:JSON.stringify({nom_compteur:nom})}); }catch(e){} }
+    // compte un visiteur une seule fois par navigateur
+    if(SUPA_ON && !localStorage.getItem('dm_vu')){ supaIncr('visiteurs'); localStorage.setItem('dm_vu','1'); }
+
+    document.getElementById('date').textContent =
+      new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const rm = matchMedia('(prefers-reduced-motion:reduce)').matches;
+    if(!rm){
+      for(let i=0;i<5;i++){const p=document.createElement('div');p.className='petale';
+        const s=8+Math.random()*16;p.style.width=s+'px';p.style.height=s+'px';p.style.left=(Math.random()*100)+'vw';
+        p.style.animationDuration=(20+Math.random()*16)+'s';p.style.animationDelay=(Math.random()*14)+'s';document.body.appendChild(p);}
+      const els=[...document.querySelectorAll('.parallax')];
+      addEventListener('pointermove',e=>{const x=(e.clientX/innerWidth-.5),y=(e.clientY/innerHeight-.5);
+        els.forEach(el=>{const d=+el.dataset.depth||0;el.style.transform=`translate(${x*d}px,${y*d}px)`;});});
+    }
+  </script>
+</body>
+</html>
