@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- D&M Studio - Logo principal complet - Version vectorielle SVG (corrigee v2)
+     Palette : sauge #8FA68E sur fond crème transparent
+     Usage : header page, watermark PDF haute résolution, favicon scalable
+     Correction v2 : viewBox elargie a 800x420 + font-size 240 pour eviter coupure M italique -->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 800 420"
+     width="800"
+     height="420"
+     role="img"
+     aria-label="D&amp;M Studio">
+  <title>D&amp;M Studio</title>
+  <desc>Logo principal D&amp;M Studio - serif elegant sauge avec sous-titre STUDIO espace</desc>
+
+  <!-- D&M en serif elegant italique - couleur sauge principale
+       text-anchor="middle" + x=400 centre dans viewBox 800
+       padding horizontal genereux pour eviter coupure italic du M -->
+  <text x="400"
+        y="250"
+        font-family="'Cormorant Garamond', 'Playfair Display', Georgia, serif"
+        font-size="240"
+        font-style="italic"
+        font-weight="500"
+        fill="#8FA68E"
+        text-anchor="middle">D&amp;M</text>
+
+  <!-- STUDIO en sans-serif leger, espacement large -->
+  <text x="400"
+        y="350"
+        font-family="'Montserrat', 'Inter', -apple-system, sans-serif"
+        font-size="40"
+        font-weight="300"
+        letter-spacing="0.5em"
+        fill="#8FA68E"
+        text-anchor="middle">STUDIO</text>
+</svg>
