@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- D&M Studio - Favicon esperluette - Version vectorielle SVG
+     Palette : sauge #8FA68E (vert sauge-400) sur fond crème transparent
+     Usage : favicon web, signature PDF, icon app -->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 200 200"
+     width="200"
+     height="200"
+     role="img"
+     aria-label="D&amp;M Studio">
+  <title>D&amp;M Studio - Esperluette</title>
+  <desc>Esperluette stylisée serif élégante en sauge - signature D&amp;M Studio</desc>
+  <text x="100"
+        y="155"
+        font-family="'Cormorant Garamond', 'Playfair Display', Georgia, serif"
+        font-size="200"
+        font-style="italic"
+        font-weight="500"
+        fill="#8FA68E"
+        text-anchor="middle"
+        dominant-baseline="auto">&amp;</text>
+</svg>
